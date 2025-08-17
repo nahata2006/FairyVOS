@@ -1,0 +1,10 @@
+# Paramètres IMU
+imu:
+  topic_primary: "/camera/imu"
+  topic_reference: "/avion/imu_base"
+  gravity_threshold: 0.3  # m/s²
+  fusion_alpha: 0.95      # Poids référence fixe
+
+# Override ORB-SLAM3
+ORBextractor:
+  nFeatures: 2000         # Augmenté pour environnement spatial
