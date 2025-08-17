@@ -1,21 +1,21 @@
 #pragma once
 #include <Eigen/Core>
 
-class GravityManager {
-public:
-    static float current_gravity;
-    
-    static void UpdateFromSensors(const Eigen::Vector3f& imu_embarqué, 
-                                const Eigen::Vector3f& imu_fixe) {
-        // Calcul du delta G
-        float delta = (imu_embarqué - imu_fixe).norm();
+namespace ORB_SLAM3 {
+    class GravityManager {
+    private:
+        static float mGravityValue;
+    public:
+        static void SetGravity(float g) { mGravityValue = g; }
+        static float GetGravity() { return mGravityValue; }
         
-        // Seuil de recalibration (0.3 m/s²)
-        if(delta > 0.3f) {
-            current_gravity = imu_fixe.norm(); 
-            RequestSLAMReset();
+        static void UpdateFromReference(const Eigen::Vector3f& imuRef, 
+                                      const Eigen::Vector3f& imuEmbarked,
+                                      float threshold = 0.3f) {
+            float delta = (imuRef - imuEmbarked).norm();
+            if(delta > threshold) {
+                mGravityValue = imuRef.norm();
+            }
         }
-    }
-    
-    static void RequestSLAMReset(); // À implémenter
-};
+    };
+}
